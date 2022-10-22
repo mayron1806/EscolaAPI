@@ -37,8 +37,8 @@ namespace EscolaAPI.Controllers
         {
             try
             {
-                var escolas = await _escolaServices.PegaEscolaPorId(id);
-                return Ok(escolas);
+                var escola = await _escolaServices.PegaEscolaPorId(id);
+                return Ok(escola);
             }
             catch (Exception e)
             {
@@ -92,11 +92,11 @@ namespace EscolaAPI.Controllers
 
         // DELETE
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Escola>> DeletaEscola(Guid id)
+        public async Task<IActionResult> DeletaEscola(Guid id)
         {
             try
             {
-                await _escolaServices.Deletar(id);
+                await _escolaServices.DeletarEscola(id);
                 return Ok("Escola deletada com sucesso!");
             }
             catch (Exception e)

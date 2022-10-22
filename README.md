@@ -10,5 +10,4 @@
  - Notas: Cada alunos possui uma determinada nota, a entidade nota possui alguns campos, são eles: Nome, Valor, Bimestre(1, 2, 3 ou 4) e por fim Ano.
 
 
-
 ## PROJETO EM DESENVOLVIMENTO

@@ -17,17 +17,16 @@ namespace EscolaAPI.Repository
         {
             _context = context;
             _escolaContext = context.Escolas;
-
         }
 
         // SELECT
-        public async Task<Escola> PegaPorId(Guid id)
+        public async Task<Escola> PegaPorIdAsync(Guid id)
         {
             return await _escolaContext
                 .AsNoTracking()
                 .FirstOrDefaultAsync(e => e.ID == id);
         }
-         public async Task<List<Escola>> PegarPorNome(string nome)
+         public async Task<List<Escola>> PegarPorNomeAsync(string nome)
         {
             var escolas = await _escolaContext
                 .AsNoTracking()
@@ -35,7 +34,7 @@ namespace EscolaAPI.Repository
                 .ToListAsync();
             return escolas;
         }
-        public async Task<List<Escola>> PegaTodos()
+        public async Task<List<Escola>> PegaTodosAsync()
         {
             return await _escolaContext
                 .AsNoTracking()
@@ -43,7 +42,7 @@ namespace EscolaAPI.Repository
         }
         
         // INSERT
-        public async Task<Escola> Adicionar(Escola novaEscola){
+        public async Task<Escola> AdicionarAsync(Escola novaEscola){
             await _escolaContext.AddAsync(novaEscola);
             await _context.SaveChangesAsync();
 
@@ -51,14 +50,14 @@ namespace EscolaAPI.Repository
         }
         
         // UPDATE
-        public async Task<Escola> Atualizar(Escola novaEscola){
+        public async Task<Escola> AtualizarAsync(Escola novaEscola){
             _context.Update(novaEscola);
             await _context.SaveChangesAsync();
             return novaEscola;
         }
 
         // DELETE
-        public async Task<bool> Deletar(Escola escola){
+        public async Task<bool> DeletarAsync(Escola escola){
             _escolaContext.Remove(escola);
             return (await _context.SaveChangesAsync()) > 0;
         }

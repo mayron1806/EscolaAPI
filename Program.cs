@@ -16,6 +16,8 @@ builder.Services
 );
 
 // DI
+builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
+builder.Services.AddScoped<AlunoServices>();
 builder.Services.AddScoped<IEscolaRepository, EscolaRepository>();
 builder.Services.AddScoped<EscolaServices>();
 
