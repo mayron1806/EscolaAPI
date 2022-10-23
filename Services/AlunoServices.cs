@@ -71,7 +71,8 @@ namespace EscolaAPI.Services
             if(aluno == null) throw new NullReferenceException("Erro ao tentar atualizar o aluno. Aluno não encontrado.");
             return await _alunoRepo.AtualizarAsync(modelo);
         }
-        public async Task<bool> DeletarAluno(Guid id){
+        public async Task<bool> DeletarAluno(Guid id)
+        {
             var aluno = await _alunoRepo.PegaPorIdAsync(id);
             if(aluno == null) throw new NullReferenceException("O aluno que você está tentando deletar não foi encontrado.");
             return await _alunoRepo.DeletarAsync(aluno);

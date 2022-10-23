@@ -9,12 +9,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EscolaAPI.Repository
 {
-    public class AlunoRepository : IAlunoRepository
+    public class AlunoRepository : GenericoRepository<Aluno>, IAlunoRepository
     {
         private readonly EscolaContext _context;
         private readonly DbSet<Aluno> _alunoContext;
 
-        public AlunoRepository(EscolaContext context)
+        public AlunoRepository(EscolaContext context): base(context)
         {
             _context = context;
             _alunoContext = context.Alunos;
@@ -59,26 +59,5 @@ namespace EscolaAPI.Repository
             return await query.ToListAsync();
         }
         #endregion
-
-        public async Task<Aluno> AdicionarAsync(Aluno entity)
-        {
-            await _alunoContext.AddAsync(entity);
-            await _context.SaveChangesAsync();
-
-            return entity;
-        }
-
-        public async Task<Aluno> AtualizarAsync(Aluno entity)
-        {
-             _context.Update(entity);
-            await _context.SaveChangesAsync();
-            return entity;
-        }
-
-        public async Task<bool> DeletarAsync(Aluno entity)
-        {
-            _alunoContext.Remove(entity);
-            return (await _context.SaveChangesAsync()) > 0;
-        }
     }
 }

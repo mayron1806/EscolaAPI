@@ -20,6 +20,8 @@ builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
 builder.Services.AddScoped<AlunoServices>();
 builder.Services.AddScoped<IEscolaRepository, EscolaRepository>();
 builder.Services.AddScoped<EscolaServices>();
+builder.Services.AddScoped<INotaRepository, NotaRepository>();
+builder.Services.AddScoped<NotaServices>();
 
 
 builder.Services.AddEndpointsApiExplorer();

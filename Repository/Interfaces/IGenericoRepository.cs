@@ -1,6 +1,6 @@
 namespace EscolaAPI.Repository.Interfaces
 {
-    public interface IGenericoRepository<T> where T : class
+    public interface IGenericoRepository<T>
     {
         public Task<T> AdicionarAsync(T entity);
         public Task<T> AtualizarAsync(T entity);

@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using EscolaAPI.Context;
 using EscolaAPI.Entities;
@@ -9,11 +5,11 @@ using EscolaAPI.Repository.Interfaces;
 
 namespace EscolaAPI.Repository
 {
-    public class EscolaRepository: IEscolaRepository
+    public class EscolaRepository: GenericoRepository<Escola>, IEscolaRepository
     {
         private readonly EscolaContext _context;
         private readonly DbSet<Escola> _escolaContext;
-        public EscolaRepository(EscolaContext context)
+        public EscolaRepository(EscolaContext context): base(context)
         {
             _context = context;
             _escolaContext = context.Escolas;
@@ -39,27 +35,6 @@ namespace EscolaAPI.Repository
             return await _escolaContext
                 .AsNoTracking()
                 .ToListAsync();
-        }
-        
-        // INSERT
-        public async Task<Escola> AdicionarAsync(Escola novaEscola){
-            await _escolaContext.AddAsync(novaEscola);
-            await _context.SaveChangesAsync();
-
-            return novaEscola;
-        }
-        
-        // UPDATE
-        public async Task<Escola> AtualizarAsync(Escola novaEscola){
-            _context.Update(novaEscola);
-            await _context.SaveChangesAsync();
-            return novaEscola;
-        }
-
-        // DELETE
-        public async Task<bool> DeletarAsync(Escola escola){
-            _escolaContext.Remove(escola);
-            return (await _context.SaveChangesAsync()) > 0;
         }
     }
 }
