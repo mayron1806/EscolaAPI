@@ -10,6 +10,12 @@ public class EscolaServices
     private readonly IEscolaRepository _escolaRepo;
     public EscolaServices(IEscolaRepository escolaRepo){ _escolaRepo = escolaRepo; }
 
+    public static async Task ValidaEscolaExiste(IEscolaRepository _escolaRepo, Guid escolaID){
+        var escola = await _escolaRepo.PegaPorIdAsync(escolaID);
+        if(escola == null){
+            throw new ArgumentException("A escola não existe");
+        }
+    }
     // SELECT
     public async Task<Escola> PegaEscolaPorId(Guid id)
     {
@@ -50,7 +56,7 @@ public class EscolaServices
     }
     
     // DELETE
-    public async Task<bool> DeletarEscola(Guid id)
+    public async Task<bool> Deletar(Guid id)
     {
         var escola = await _escolaRepo.PegaPorIdAsync(id);
         if(escola == null) throw new NullReferenceException("A escola que você está tentando deletar não foi encontrada.");

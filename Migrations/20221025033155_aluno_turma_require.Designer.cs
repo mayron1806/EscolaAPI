@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EscolaAPI.Migrations
 {
     [DbContext(typeof(EscolaContext))]
-    [Migration("20221021194645_presencaPadrao")]
-    partial class presencaPadrao
+    [Migration("20221025033155_aluno_turma_require")]
+    partial class aluno_turma_require
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -30,19 +30,28 @@ namespace EscolaAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("DataNascimento")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("EscolaID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("Presenca")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("TurmaID")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("ID");
 
                     b.HasIndex("EscolaID");
+
+                    b.HasIndex("TurmaID");
 
                     b.ToTable("Alunos");
                 });
@@ -55,7 +64,11 @@ namespace EscolaAPI.Migrations
 
                     b.Property<string>("Nome")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<float>("Pontos")
+                        .HasColumnType("real");
 
                     b.HasKey("ID");
 
@@ -74,8 +87,17 @@ namespace EscolaAPI.Migrations
                     b.Property<int>("Ano")
                         .HasColumnType("int");
 
-                    b.Property<int>("Bimestre")
-                        .HasColumnType("int");
+                    b.Property<string>("Bimestre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Materia")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Valor")
                         .HasColumnType("int");
@@ -87,6 +109,22 @@ namespace EscolaAPI.Migrations
                     b.ToTable("Notas");
                 });
 
+            modelBuilder.Entity("EscolaAPI.Entities.Turma", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Turmas");
+                });
+
             modelBuilder.Entity("EscolaAPI.Entities.Aluno", b =>
                 {
                     b.HasOne("EscolaAPI.Entities.Escola", "Escola")
@@ -95,7 +133,15 @@ namespace EscolaAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("EscolaAPI.Entities.Turma", "Turma")
+                        .WithMany("Alunos")
+                        .HasForeignKey("TurmaID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Escola");
+
+                    b.Navigation("Turma");
                 });
 
             modelBuilder.Entity("EscolaAPI.Entities.Nota", b =>
@@ -115,6 +161,11 @@ namespace EscolaAPI.Migrations
                 });
 
             modelBuilder.Entity("EscolaAPI.Entities.Escola", b =>
+                {
+                    b.Navigation("Alunos");
+                });
+
+            modelBuilder.Entity("EscolaAPI.Entities.Turma", b =>
                 {
                     b.Navigation("Alunos");
                 });

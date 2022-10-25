@@ -14,22 +14,9 @@ namespace EscolaAPI.Controllers
             _alunoServices = alunoServices;
         }
         #region GETS
-        [HttpGet("presenca")]
-        public async Task<IActionResult> PegaPorPresenca([FromQuery] string condicao, [FromQuery] int presenca, [FromQuery] Guid escola)
-        {
-            try
-            {
-                var alunos = await _alunoServices.PegaAlunosPorPresenca(escola, condicao, presenca);
-                return Ok(alunos);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
-        }
         
         [HttpGet("nome")]
-        public async Task<IActionResult> PegaPorNome([FromQuery] string nome, [FromQuery] Guid escola)
+        public async Task<IActionResult> PegaPorNome([FromQuery] Guid escola, [FromQuery] string nome)
         {
             try
             {
@@ -56,6 +43,19 @@ namespace EscolaAPI.Controllers
             }
         }
         
+        [HttpGet("turma")]
+        public async Task<IActionResult> PegaPorTurma([FromQuery] Guid escola, [FromQuery] int turma)
+        {
+            try
+            {
+                var alunos = await _alunoServices.PegaAlunosPorTurma(escola, turma);
+                return Ok(alunos);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
         [HttpGet("escola/{escolaID}")]
         public async Task<IActionResult> PegaPorEscola(Guid escolaID)
         {
@@ -77,7 +77,7 @@ namespace EscolaAPI.Controllers
         {
             try
             {
-                var aluno = await _alunoServices.AdicionarAluno(novoAluno);
+                var aluno = await _alunoServices.Adicionar(novoAluno);
                 return CreatedAtAction(nameof(PegaPorID), new {id = aluno.ID}, aluno);
             }
             catch (Exception e)
@@ -91,7 +91,7 @@ namespace EscolaAPI.Controllers
         {
             try
             {
-                var aluno = await _alunoServices.AtualizarAluno(id, novoAluno);
+                var aluno = await _alunoServices.Atualizar(id, novoAluno);
                 return Ok(aluno);
             }
             catch (Exception e)
@@ -105,7 +105,7 @@ namespace EscolaAPI.Controllers
         {
             try
             {
-                await _alunoServices.DeletarAluno(id);
+                await _alunoServices.Deletar(id);
                 return Ok("Aluno deletado com sucesso!");
             }
             catch (Exception e)

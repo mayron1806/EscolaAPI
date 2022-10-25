@@ -1,4 +1,4 @@
-namespace EscolaAPI.Entities
+namespace EscolaAPI.Entities.Enums
 {
     public enum Bimestre
     {

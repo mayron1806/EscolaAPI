@@ -12,7 +12,7 @@ namespace EscolaAPI.Repository.Interfaces
         
         public Task<Aluno> PegaPorIdAsync(Guid id);
         public Task<List<Aluno>> PegaTodosDaEscolaAsync(Guid escolaID);
-        public Task<List<Aluno>> PegarPorNomeAsync(Guid escolaID, string nome); 
-        public Task<List<Aluno>> PegarPorPresencaAsync(Guid escolaID, Expression<Func<Aluno, bool>> e); 
+        public Task<List<Aluno>> PegaPorNomeAsync(Guid escolaID, string nome); 
+        public Task<List<Aluno>> PegaPorTurmaAsync(Guid escolaID, int turma);
     }
 }

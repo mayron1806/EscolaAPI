@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EscolaAPI.DTO;
 using EscolaAPI.Entities;
+using EscolaAPI.Entities.Enums;
 
 namespace EscolaAPI.Repository.Interfaces
 {

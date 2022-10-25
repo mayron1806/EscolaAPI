@@ -96,7 +96,7 @@ namespace EscolaAPI.Controllers
         {
             try
             {
-                await _escolaServices.DeletarEscola(id);
+                await _escolaServices.Deletar(id);
                 return Ok("Escola deletada com sucesso!");
             }
             catch (Exception e)

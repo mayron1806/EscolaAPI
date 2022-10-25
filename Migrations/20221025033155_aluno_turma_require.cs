@@ -4,7 +4,7 @@
 
 namespace EscolaAPI.Migrations
 {
-    public partial class presencaPadrao : Migration
+    public partial class aluno_turma_require : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

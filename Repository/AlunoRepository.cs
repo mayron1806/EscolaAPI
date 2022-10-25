@@ -36,7 +36,7 @@ namespace EscolaAPI.Repository
                 .FirstOrDefaultAsync(a => a.ID == id);
         }
 
-        public async Task<List<Aluno>> PegarPorNomeAsync(Guid escolaID, string nome)
+        public async Task<List<Aluno>> PegaPorNomeAsync(Guid escolaID, string nome)
         {
             var query = FiltraPorEscola(escolaID)
                 .AsNoTracking()
@@ -44,18 +44,18 @@ namespace EscolaAPI.Repository
             return await query.ToListAsync();
         }
 
-        public async Task<List<Aluno>> PegarPorPresencaAsync(Guid escolaID, Expression<Func<Aluno, bool>> e)
-        {
-            var query = FiltraPorEscola(escolaID)
-                .AsNoTracking()
-                .Where(e);
-            return await query.ToListAsync();
-        }
-
         public async Task<List<Aluno>> PegaTodosDaEscolaAsync(Guid escolaID)
         {
             var query = FiltraPorEscola(escolaID)
                 .AsNoTracking();
+            return await query.ToListAsync();
+        }
+
+        public async Task<List<Aluno>> PegaPorTurmaAsync(Guid escolaID, int turma)
+        {
+            var query = FiltraPorEscola(escolaID)
+                .AsNoTracking();
+
             return await query.ToListAsync();
         }
         #endregion

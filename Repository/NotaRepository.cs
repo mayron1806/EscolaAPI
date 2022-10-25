@@ -2,7 +2,7 @@ using EscolaAPI.Entities;
 using EscolaAPI.Repository.Interfaces;
 using EscolaAPI.Context;
 using Microsoft.EntityFrameworkCore;
-using EscolaAPI.DTO;
+using EscolaAPI.Entities.Enums;
 
 namespace EscolaAPI.Repository
 {
