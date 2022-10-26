@@ -15,21 +15,7 @@ namespace EscolaAPI.Repository
             _escolaContext = context.Escolas;
         }
 
-        // SELECT
-        public async Task<Escola> PegaPorIdAsync(Guid id)
-        {
-            return await _escolaContext
-                .AsNoTracking()
-                .FirstOrDefaultAsync(e => e.ID == id);
-        }
-         public async Task<List<Escola>> PegarPorNomeAsync(string nome)
-        {
-            var escolas = await _escolaContext
-                .AsNoTracking()
-                .Where(e => e.Nome.ToLower().Contains(nome.ToLower()))
-                .ToListAsync();
-            return escolas;
-        }
+        
         public async Task<List<Escola>> PegaTodosAsync()
         {
             return await _escolaContext

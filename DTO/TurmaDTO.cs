@@ -12,6 +12,7 @@ namespace EscolaAPI.DTO
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid ID { get; set; }
+        public Guid EscolaID { get; set; }  
         
         [Required] 
         [MaxLength(20)]

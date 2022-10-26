@@ -19,44 +19,25 @@ namespace EscolaAPI.Repository
             _context = context;
             _alunoContext = context.Alunos;
         }
-        /// <summary>
-        ///     Retorna um "IQueriyable" que contem um filtro dos alunos por escola.
-        /// </summary>
-        /// <param name="escolaID">ID da escola para filtrar os alunos</param>
-        /// <returns></returns>
-        private IQueryable<Aluno> FiltraPorEscola(Guid escolaID){
-            return _alunoContext.Where(a => a.EscolaID == escolaID);
-        }
-        
+
         #region SELECT
-        public async Task<Aluno> PegaPorIdAsync(Guid id)
+        public async Task<List<Aluno>> PegaPorEscolaAsync(Guid escolaID)
         {
-            return await _alunoContext
+            var alunos = await _alunoContext
                 .AsNoTracking()
-                .FirstOrDefaultAsync(a => a.ID == id);
+                .Where(a => a.EscolaID == escolaID)
+                .ToListAsync();
+            return alunos;
         }
 
-        public async Task<List<Aluno>> PegaPorNomeAsync(Guid escolaID, string nome)
+        public async Task<List<Aluno>> PegaPorTurmaAsync(Guid turmaID)
         {
-            var query = FiltraPorEscola(escolaID)
+            var alunos = await _alunoContext
                 .AsNoTracking()
-                .Where(a => a.Nome.ToLower().Contains(nome.ToLower()));
-            return await query.ToListAsync();
-        }
+                .Where(a => a.TurmaID == turmaID)
+                .ToListAsync();
 
-        public async Task<List<Aluno>> PegaTodosDaEscolaAsync(Guid escolaID)
-        {
-            var query = FiltraPorEscola(escolaID)
-                .AsNoTracking();
-            return await query.ToListAsync();
-        }
-
-        public async Task<List<Aluno>> PegaPorTurmaAsync(Guid escolaID, int turma)
-        {
-            var query = FiltraPorEscola(escolaID)
-                .AsNoTracking();
-
-            return await query.ToListAsync();
+            return alunos;
         }
         #endregion
     }

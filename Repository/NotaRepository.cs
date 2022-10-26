@@ -15,7 +15,16 @@ namespace EscolaAPI.Repository
             _context = context;
             _notaContext = context.Notas;
         }
-        public async Task<List<Nota>> PegaNotasDoAluno(Guid alunoID, int ano)
+        public async Task<List<Nota>> PegaDoAluno(Guid alunoID)
+        {
+            var notas = await _notaContext
+                .AsNoTracking()
+                .Where(n => n.AlunoID == alunoID)
+                .ToListAsync();
+
+            return notas;
+        }
+        public async Task<List<Nota>> PegaDoAlunoPorAno(Guid alunoID, int ano)
         {
             var notas = await _notaContext
                 .AsNoTracking()
@@ -25,24 +34,26 @@ namespace EscolaAPI.Repository
 
             return notas;
         }
-
-        public async Task<Nota> PegaNotaPorID(Guid id)
-        {
-            var nota = await _notaContext
+        public async Task<List<Nota>> PegaNotasDaTurma(Guid turmaID){
+            var notas = await _notaContext
                 .AsNoTracking()
-                .FirstOrDefaultAsync(n => n.ID == id);
-            return nota;
+                .Where(n => n.Aluno.TurmaID == turmaID)
+                .ToListAsync();
+            return notas;
         }
 
-        public async Task<List<Nota>> PegaNotasDoBimestre(Guid alunoID, Bimestre bimestre, int ano)
+        public async Task<float> PegaMediaNotaTurma(Guid turmaID)
         {
             var notas = await _notaContext
                 .AsNoTracking()
-                .Where(n => n.AlunoID == alunoID)
-                .Where(n => n.Bimestre == bimestre)
-                .Where(n => n.Ano == ano)
+                .Where(n => n.Aluno.TurmaID == turmaID)
                 .ToListAsync();
-            return notas;
+            float media = 0f;
+            foreach(Nota n in notas){
+                media += n.Valor;
+            }
+            media = media / notas.Count;
+            return media;
         }
     }
 }

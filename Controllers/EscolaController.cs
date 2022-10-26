@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using EscolaAPI.Services;
 using EscolaAPI.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace EscolaAPI.Controllers
 {
@@ -12,9 +13,15 @@ namespace EscolaAPI.Controllers
     public class EscolaController: ControllerBase
     {
         private readonly EscolaServices _escolaServices;
-        public EscolaController(EscolaServices escolaServices)
+        private readonly AlunoServices _alunoServices;
+        private readonly TurmaServices _turmaServices;
+
+
+        public EscolaController(EscolaServices escolaServices, AlunoServices alunoServices, TurmaServices turmaServices)
         {
             _escolaServices = escolaServices;
+            _turmaServices = turmaServices;
+            _alunoServices = alunoServices;
         }
 
         // GET
@@ -31,13 +38,39 @@ namespace EscolaAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
+        [HttpGet("{id}/alunos")]
+        public async Task<IActionResult> PegaAlunos(Guid id)
+        {
+            try
+            {
+                var escolas = await _alunoServices.PegaAlunosEscola(id);
+                return Ok(escolas);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
+        [HttpGet("{id}/turmas")]
+        public async Task<IActionResult> PegaTurmas(Guid id)
+        {
+            try
+            {
+                var escolas = await _turmaServices.PegaTurmasDaEscola(id);
+                return Ok(escolas);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> PegaPorID(Guid id)
         {
             try
             {
-                var escola = await _escolaServices.PegaEscolaPorId(id);
+                var escola = await _escolaServices.PegaPorID(id);
                 return Ok(escola);
             }
             catch (Exception e)
@@ -46,19 +79,6 @@ namespace EscolaAPI.Controllers
             }
         }
 
-        [HttpGet("{nome}/nome")]
-        public async Task<IActionResult> PegaPorNome(string nome)
-        {
-            try
-            {
-                var escolas = await _escolaServices.PegaEscolasPorNome(nome);
-                return Ok(escolas);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-            }
-        }
         
         // POST
         [HttpPost]
@@ -76,8 +96,8 @@ namespace EscolaAPI.Controllers
         }
 
         // PUT/ PATCH
-        [HttpPut("{id}")]
-        public async Task<ActionResult<Escola>> AtualizaEscola(Guid id, Escola novaEscola)
+        [HttpPatch("{id}")]
+        public async Task<ActionResult<Escola>> AtualizaEscola(Guid id, JsonPatchDocument<Escola> novaEscola)
         {
             try
             {

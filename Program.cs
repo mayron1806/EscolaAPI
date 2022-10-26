@@ -22,7 +22,8 @@ builder.Services.AddScoped<IEscolaRepository, EscolaRepository>();
 builder.Services.AddScoped<EscolaServices>();
 builder.Services.AddScoped<INotaRepository, NotaRepository>();
 builder.Services.AddScoped<NotaServices>();
-
+builder.Services.AddScoped<ITurmaRepository, TurmaRepository>();
+builder.Services.AddScoped<TurmaServices>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

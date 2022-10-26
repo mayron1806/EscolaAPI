@@ -9,10 +9,7 @@ namespace EscolaAPI.Repository.Interfaces
 {
     public interface IAlunoRepository: IGenericoRepository<Aluno>
     {
-        
-        public Task<Aluno> PegaPorIdAsync(Guid id);
-        public Task<List<Aluno>> PegaTodosDaEscolaAsync(Guid escolaID);
-        public Task<List<Aluno>> PegaPorNomeAsync(Guid escolaID, string nome); 
-        public Task<List<Aluno>> PegaPorTurmaAsync(Guid escolaID, int turma);
+        public Task<List<Aluno>> PegaPorEscolaAsync(Guid escolaID);
+        public Task<List<Aluno>> PegaPorTurmaAsync(Guid turmaID);
     }
 }

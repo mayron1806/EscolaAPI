@@ -2,6 +2,7 @@ using EscolaAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using EscolaAPI.Entities;
 using EscolaAPI.Entities.Enums;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace EscolaAPI.Controllers
 {
@@ -14,42 +15,28 @@ namespace EscolaAPI.Controllers
         {
             _notaServices = notaServices;
         }
-
+        
         [HttpGet]
-        public async Task<ActionResult<List<Nota>>> PegaNotasDoAluno([FromQuery] Guid alunoID, [FromQuery] int ano){
+        public async Task<ActionResult<Nota>> PegaNotaPorID(Guid id)
+        {
             try
             {
-                (bool sucesso, Guid resultado) = GuidServices.GuidValido("");
-                if(!sucesso){
-                    return BadRequest("Por favor forneça um aluno valido.");
-                }
-                var notas = await _notaServices.PegaNotasPorAluno(resultado, ano);
-                return Ok(notas);
+                var nota = await _notaServices.PegaNotasPorID(id);
+                return Ok(nota);
             }
             catch (Exception e)
             {
-                return NotFound(e.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
             }
         }
-        [HttpGet("bimestre/{bimestre}")]
-        public async Task<ActionResult<int>> PegaNotasDoBimestre([FromRoute] Bimestre bimestre, [FromQuery] Guid alunoID, [FromQuery] int ano){
-            try
-            {
-                var somaNotas = await _notaServices.SomaNotasDoBimestre(alunoID, bimestre, ano);
-                return Ok(new { resultadoBimestral  = somaNotas });
-            }
-            catch (Exception e)
-            {
-                return NotFound(e.Message);
-            }
-        }
+
         [HttpPost]
         public async Task<ActionResult<Nota>> AdicionaNota(Nota novaNota)
         {
             try
             {
-                var escola = await _notaServices.Adicionar(novaNota);
-                return Ok(escola);
+                var nota = await _notaServices.Adicionar(novaNota);
+                return Ok(nota);
             }
             catch (Exception e)
             {
@@ -59,12 +46,12 @@ namespace EscolaAPI.Controllers
 
         // PUT/ PATCH
         [HttpPut("{id}")]
-        public async Task<ActionResult<Nota>> AtualizaNota(Guid id, Nota novaNota)
+        public async Task<ActionResult<Nota>> AtualizaNota(Guid id, JsonPatchDocument<Nota> novaNota)
         {
             try
             {
-                var escola = await _notaServices.Atualizar(id, novaNota);
-                return Ok(escola);
+                var nota = await _notaServices.Atualizar(id, novaNota);
+                return Ok(nota);
             }
             catch (Exception e)
             {

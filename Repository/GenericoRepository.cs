@@ -1,17 +1,24 @@
 using EscolaAPI.Repository.Interfaces;
 using EscolaAPI.Context;
-using Microsoft.EntityFrameworkCore;
 
 namespace EscolaAPI.Repository
 {
     
-    public class GenericoRepository<T> : IGenericoRepository<T>
+    public class GenericoRepository<T> : IGenericoRepository<T> where T: class
     {
         private readonly EscolaContext _context;
         public GenericoRepository(EscolaContext context){ 
             _context = context;
         }
+        public async Task<T> PegaPorIDAsync(Guid id)
+        {
+            var result = await _context
+                .Set<T>()
+                .FindAsync(id);
 
+            return result;
+
+        }
         public async Task<T> AdicionarAsync(T novaEntity){
             await _context.AddAsync(novaEntity);
             await _context.SaveChangesAsync();
@@ -31,5 +38,7 @@ namespace EscolaAPI.Repository
             _context.Remove(entity);
             return (await _context.SaveChangesAsync()) > 0;
         }
+
+       
     }
 }

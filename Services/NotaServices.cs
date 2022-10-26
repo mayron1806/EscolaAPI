@@ -3,73 +3,38 @@ using EscolaAPI.Entities.Enums;
 using EscolaAPI.Repository.Interfaces;
 namespace EscolaAPI.Services
 {
-    public class NotaServices
+    public class NotaServices: GenericoService<Nota>
     {
         private readonly INotaRepository _notaRepo;
         private readonly IAlunoRepository _alunoRepo;
-        public NotaServices(INotaRepository notaRepo, IAlunoRepository alunoRepo)
+        public NotaServices(INotaRepository notaRepo, IAlunoRepository alunoRepo): base(notaRepo)
         {
             _alunoRepo = alunoRepo;
             _notaRepo = notaRepo;
         }
-        public async Task<List<Nota>> PegaNotasPorAluno(Guid alunoID, int ano = 0)
+        public async Task<Nota> PegaNotasPorID(Guid notaID)
         {
             // verifica se possui um aluno com o id
-            var aluno = await _alunoRepo.PegaPorIdAsync(alunoID);
-            if(aluno == null){
+            var nota = await _notaRepo.PegaPorIDAsync(notaID);
+            if(nota == null){
                 throw new Exception("Este aluno não existe.");
             }
-            // pega o ano atual se não for passado nenhum ano
-            if(ano == 0){
-                ano = DateTime.Now.Year;
+            return nota;
+        }
+        public async Task<List<Nota>> PegaNotasDoAluno(Guid alunoID, int ano)
+        {
+            var aluno = await _alunoRepo.PegaPorIDAsync(alunoID);
+            if(aluno == null){
+                throw new ArgumentException("O aluno não existe.");
             }
-            var notas = await _notaRepo.PegaNotasDoAluno(alunoID, ano);
+            List<Nota> notas;
+            int anoAtual = DateTime.Now.Year;
+            if(ano <= 0 || ano > anoAtual){
+                notas = await _notaRepo.PegaDoAluno(alunoID);
+            }else{
+                notas = await _notaRepo.PegaDoAlunoPorAno(alunoID, ano);
+            }
             return notas;
-        }
-        public async Task<int> SomaNotasDoBimestre(Guid alunoID, Bimestre bimestre, int ano)
-        {
-            // verifica se possui um aluno com o id
-            var aluno = await _alunoRepo.PegaPorIdAsync(alunoID);
-            if(aluno == null){
-                throw new Exception("Este aluno não existe.");
-            }
-            // pega o ano atual se não for passado nenhum ano
-            if(ano == 0){
-                ano = DateTime.Now.Year;
-            }
-            var notas = await _notaRepo.PegaNotasDoBimestre(alunoID, bimestre, ano);
-
-            // soma as notas do bimestre
-            int resultadoBimestre = 0;
-            foreach(Nota n in notas){ resultadoBimestre += n.Valor; }
-
-            return resultadoBimestre;
-        }
-        // INSERT
-        public async Task<Nota> Adicionar(Nota novaNota)
-        {
-            await _notaRepo.AdicionarAsync(novaNota);
-            if(novaNota.ID == null){
-                throw new Exception("Erro ao adicionar nota.");
-            }
-            return novaNota;
-        }
-
-        // UPDATE
-        public async Task<Nota> Atualizar(Guid id, Nota novaNota)
-        {
-            var nota = await _notaRepo.PegaNotaPorID(id);
-            if(nota == null) throw new NullReferenceException("Erro ao atualizar a nota. A nota não encontrada.");
-            novaNota.ID = nota.ID;
-            return await _notaRepo.AtualizarAsync(novaNota);
-        }
-        
-        // DELETE
-        public async Task<bool> Deletar(Guid id)
-        {
-            var escola = await _notaRepo.PegaNotaPorID(id);
-            if(escola == null) throw new NullReferenceException("A nota que você está tentando deletar não foi encontrada.");
-            return await _notaRepo.DeletarAsync(escola);
         }
     }
 }
