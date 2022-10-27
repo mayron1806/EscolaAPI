@@ -8,21 +8,25 @@ namespace EscolaAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class NotaController : ControllerBase
+    public class TurmaController : ControllerBase
     {
         private readonly NotaServices _notaServices;
-        public NotaController(NotaServices notaServices)
+        private readonly TurmaServices _turmaServices;
+
+        public TurmaController(TurmaServices turmaServices, NotaServices notaServices)
         {
+            _turmaServices = turmaServices;
             _notaServices = notaServices;
         }
         
         [HttpGet]
-        public async Task<ActionResult<Nota>> PegaNotaPorID(Guid id)
+        public async Task<ActionResult<Turma>> PegaTurmaPorID(Guid id)
         {
+            
             try
             {
-                var nota = await _notaServices.PegaPorID(id);
-                return Ok(nota);
+                var turma = await _turmaServices.PegaPorID(id);
+                return Ok(turma);
             }
             catch (Exception e)
             {
@@ -31,12 +35,12 @@ namespace EscolaAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Nota>> AdicionaNota(Nota novaNota)
+        public async Task<ActionResult<Turma>> AdicionaTurma(Turma novaTurma)
         {
             try
             {
-                var nota = await _notaServices.Adicionar(novaNota);
-                return Ok(nota);
+                var turma = await _turmaServices.Adicionar(novaTurma);
+                return Ok(turma);
             }
             catch (Exception e)
             {
@@ -46,12 +50,12 @@ namespace EscolaAPI.Controllers
 
         // PUT/ PATCH
         [HttpPut("{id}")]
-        public async Task<ActionResult<Nota>> AtualizaNota(Guid id, JsonPatchDocument<Nota> novaNota)
+        public async Task<ActionResult<Nota>> AtualizaTurma(Guid id, JsonPatchDocument<Nota> novaTurma)
         {
             try
             {
-                var nota = await _notaServices.Atualizar(id, novaNota);
-                return Ok(nota);
+                var turma = await _notaServices.Atualizar(id, novaTurma);
+                return Ok(turma);
             }
             catch (Exception e)
             {
@@ -65,8 +69,8 @@ namespace EscolaAPI.Controllers
         {
             try
             {
-                await _notaServices.Deletar(id);
-                return Ok("Nota deletada com sucesso!");
+                await _turmaServices.Deletar(id);
+                return Ok("Turma deletada com sucesso!");
             }
             catch (Exception e)
             {
